@@ -21,19 +21,6 @@ public class App extends Application {
         scene = new Scene(loadFXML("primary"), 960, 720);
         stage.setScene(scene);
         stage.show();
-        
-//        ArrayList lyrics = new ArrayList();
-//        lyrics.add("Type your lyrics here");
-//        
-//        ArrayList notes = new ArrayList();
-//        notes.add("Type your notes here");
-//        
-//        Song currentSong = new Song("Type your title here", "Tuning e.g. EADGBE", "Test Vibe", lyrics, notes);
-        //testing
-        System.out.println("TEST TEST");
-
-
-
     }
 
     static void setRoot(String fxml) throws IOException {

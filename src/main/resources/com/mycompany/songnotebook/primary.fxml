@@ -52,8 +52,9 @@
             <TextArea fx:id="notesField" prefHeight="200.0" prefWidth="200.0" promptText="Type your notes here" wrapText="true" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.rowSpan="10" />
             <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveSong" text="Save" GridPane.columnIndex="3" GridPane.rowIndex="16" />
             <Label fx:id="vibeCombo" text="Vibe" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <ComboBox prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <ComboBox fx:id="vibeComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Button fx:id="newButton" mnemonicParsing="false" onAction="#newSong" text="New" GridPane.columnIndex="2" GridPane.rowIndex="16" />
+            <Button fx:id="loadButton" mnemonicParsing="false" onAction="#loadSong" text="Load" GridPane.columnIndex="1" GridPane.rowIndex="16" />
          </children>
          <VBox.margin>
             <Insets />

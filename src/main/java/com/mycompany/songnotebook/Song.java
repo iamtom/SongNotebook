@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.songnotebook;
 
-import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -14,10 +12,10 @@ public class Song {
     private String title;
     private String tuning;
     private String vibe;
-    private ArrayList lyrics;
-    private ArrayList notes;
+    private String lyrics;
+    private String notes;
     
-    public Song(String title, String tuning, String vibe, ArrayList lyrics, ArrayList notes) {
+    public Song(String title, String tuning, String vibe, String lyrics, String notes) {
         this.title = title;
         this.tuning = tuning;
         this.vibe = vibe;
@@ -49,20 +47,45 @@ public class Song {
         this.vibe = vibe;
     }
     
-    public ArrayList getLyrics() {
+    public String getLyrics() {
         return this.lyrics;
     }
     
-    public void setLyrics (ArrayList lyrics) {
-        //newLyrics arraylist is created in save button code then passed to this method
+    public void setLyrics (String lyrics) {
+        this.lyrics = lyrics;
     }
     
-    public ArrayList getNotes() {
+    public String getNotes() {
         return this.notes;
     }
     
-    public void setNotes(ArrayList notes) {
+    public void setNotes(String notes) {
         this.notes = notes;
+    }
+    
+    public void setAll(String title, String tuning, String vibe, String lyrics, String notes) {
+        this.title = title;
+        this.tuning = tuning;
+        this.vibe = vibe;
+        this.lyrics = lyrics;
+        this.notes = notes;        
+    }
+    
+    public void writeToFile() {
+        //writing lyrics to txt file
+        //what if the song title is changed? delete/overwrite old one somehow?
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("songfiles/" + this.title + ".txt"));
+            writer.write("<lyrics>" + this.lyrics + "</lyrics>"); //some way of identifying where lyrics/notes etc start and end
+            //need to write other elements
+            writer.close();
+        }
+        catch (IOException e) {
+ 
+            // Print the exception on console
+            // using getMessage() method
+            System.out.print(e.getMessage());
+        }       
     }
     
     @Override
