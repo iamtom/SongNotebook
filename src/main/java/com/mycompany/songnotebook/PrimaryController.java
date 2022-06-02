@@ -1,9 +1,11 @@
 package com.mycompany.songnotebook;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -20,7 +23,7 @@ public class PrimaryController {
     
     Song currentSong;
     
-    ObservableList loadedSongs;
+    ArrayList<Song> loadedSongs;
     
     ObservableList vibesList;
 
@@ -47,6 +50,8 @@ public class PrimaryController {
     private ComboBox<?> vibeComboBox;
     @FXML
     private Button loadButton;
+    @FXML
+    private TextField vibeField;
     
 
 
@@ -77,64 +82,97 @@ public class PrimaryController {
         System.out.println(currentSong);
     }
     
+    @FXML
+    private void loadSongIntoGUI(ActionEvent event) {
+        titleField.setText(currentSong.getTitle());
+        tuningField.setText(currentSong.getTuning());
+        vibeField.setText(currentSong.getVibe());
+        lyricsField.setText(currentSong.getLyrics());
+        notesField.setText(currentSong.getNotes());
+    }
+    
     public void initialize() {
         //Populate the vibes combo box
-        vibesList = FXCollections.observableArrayList("Bright", "Mysterious", "Dark");
+        //vibesList = FXCollections.observableArrayList("Bright", "Mysterious", "Dark");
         
-        vibeComboBox.getItems().clear();
-        vibeComboBox.setItems(vibesList);
+        loadedSongs = loadSongsIntoArrayList();
+        //put file names in combo here
         
-        //Create a Song instance
-//        ArrayList lyrics = new ArrayList();
-//        lyrics.add("Type your lyrics here");
-//        
-//        ArrayList notes = new ArrayList();
-//        notes.add("Type your notes here");
-        currentSong = new Song("Type your title here", "Tuning e.g. EADGBE", "Test Vibe", "Lyrics here", "Notes here");
+        //making song at index 0 the default song
+        //putting the Song data into the GUI
+        currentSong = loadedSongs.get(0);
+        titleField.setText(currentSong.getTitle());
+        tuningField.setText(currentSong.getTuning());
+        vibeField.setText(currentSong.getVibe());
+        lyricsField.setText(currentSong.getLyrics());
+        notesField.setText(currentSong.getNotes());
         
-        //Load songs into an observable list or arraylist here
-        //Declare it at the top somewhere
-        //Put the names into the song combobox
+        //vibeComboBox.getItems().clear();
+        //vibeComboBox.setItems(vibesList);
+        
+        songSelectCombo.getItems().clear();
+        //songSelectCombo.setItems(loadedSongs); need to change this
+
     }
     
     public void saveSong() {
         String newTitle = titleField.getText();
         String newTuning = tuningField.getText();
-        String newVibe = vibeComboBox.getValue().toString();
+        String newVibe = vibeField.getText();
         String newLyrics = lyricsField.getText();
         String newNotes = notesField.getText();
         currentSong.setAll(newTitle, newTuning, newVibe, newLyrics, newNotes);
         currentSong.writeToFile();
 
-        System.out.println(newLyrics);
-        System.out.println("");
         System.out.println(currentSong);         
 
 
 
     }
-    
-    @FXML
-    public void loadSong() throws IOException {
-        //takes name of song from combo box
-        //Find in the observable list
-        //Load its data from there into a new currentSong
-        //Then populate fields from currentSong getters?
-         // Creating a path choosing file from local
-        // directory by creating an object of Path class
-        Path fileName = Path.of("test_file.txt");
-
-        String str = Files.readString(fileName);
-
-        System.out.println(str);
+       
+    public ArrayList loadSongsIntoArrayList() {
+        //get the file names from the songfiles folder and add to array
+        String[] fileNames;        
+        File file = new File("songfiles/");        
+        fileNames = file.list();        
+        //System.out.println(Arrays.toString(fileNames));
         
-        //need to split it into the respective bits and create new object
+        //convert to ArrayList and remove gitignore file
+        ArrayList fileNamesList = new ArrayList();
+        for (String piece: fileNames) {
+            if (!piece.equals(".gitignore")) {
+                fileNamesList.add(piece);
+            }
+        }
+        System.out.println(fileNamesList);       
+ 
+        //for each item in fileNamesList - read it to a string, split, then create object with each part
+        //put each Song object in the below ArrayList
+        ArrayList<Song> songs = new ArrayList<Song>();
+        
+        for (int i = 0; i < fileNamesList.size(); i++) {
+            try {
+
+                Path fileName = Path.of("songfiles/" + fileNamesList.get(i));
+                String str = Files.readString(fileName);
+
+                String[] split = str.split("\\|");   
+                System.out.println(Arrays.toString(split));
+                
+                //make a new Song object with the split string. split[0] will be title [1] tuning etc
+                Song newSong = new Song(split[0], split[1], split[2], split[3], split[4]);
+                songs.add(newSong);
+                 
+                
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return songs;  
+        
     }
-    
-    public ArrayList stringToArrayList(String inputString) {
-        ArrayList i = new ArrayList();
-        return i;
-    }
-    
+
+   
 
 }

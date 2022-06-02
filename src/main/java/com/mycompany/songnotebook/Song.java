@@ -72,18 +72,20 @@ public class Song {
     }
     
     public void writeToFile() {
-        //writing lyrics to txt file
+        //writing to txt file
         //what if the song title is changed? delete/overwrite old one somehow?
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("songfiles/" + this.title + ".txt"));
-            writer.write("<lyrics>" + this.lyrics + "</lyrics>"); //some way of identifying where lyrics/notes etc start and end
-            //need to write other elements
+            writer.write(this.title + "|");
+            writer.write(this.tuning + "|");
+            writer.write(this.vibe + "|");
+            writer.write(this.lyrics + "|"); //some way of identifying where lyrics/notes etc start and end
+            writer.write(this.notes);
             writer.close();
         }
         catch (IOException e) {
  
-            // Print the exception on console
-            // using getMessage() method
+            //Print the exception on console
             System.out.print(e.getMessage());
         }       
     }
