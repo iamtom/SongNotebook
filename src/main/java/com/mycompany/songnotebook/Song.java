@@ -76,22 +76,24 @@ public class Song {
         //what if the song title is changed? delete/overwrite old one somehow?
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("songfiles/" + this.title + ".txt"));
-            writer.write(this.title + "|");
+            writer.write(this.title + "|"); //the | separates the different attributes
             writer.write(this.tuning + "|");
             writer.write(this.vibe + "|");
-            writer.write(this.lyrics + "|"); //some way of identifying where lyrics/notes etc start and end
+            writer.write(this.lyrics + "|");
             writer.write(this.notes);
             writer.close();
         }
         catch (IOException e) {
- 
-            //Print the exception on console
             System.out.print(e.getMessage());
         }       
     }
     
     @Override
     public String toString() {
+        return this.title;
+    }
+    
+    public String printSong() {
         return "Song{" + "title=" + title + ", tuning=" + tuning + ", vibe=" + vibe + ", lyrics=" + lyrics + ", notes=" + notes + '}';
     }
    
