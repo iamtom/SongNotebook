@@ -24,13 +24,9 @@ public class PrimaryController {
     
     Song currentSong;
     
-    List<Song> loadedSongs;
-    
     ObservableList<Song> observableSongList;
 
 
-    @FXML
-    private Button primaryButton;
     @FXML
     private ComboBox<Song> songSelectCombo;
     @FXML
@@ -52,7 +48,6 @@ public class PrimaryController {
     
 
 
-    @FXML
     private void switchToSecondary() throws IOException {
         App.setRoot("secondary");
     }
@@ -67,34 +62,59 @@ public class PrimaryController {
         notesField.setText(currentSong.getNotes());
     }
 
-    private void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.TAB)) {
-            //move to next text field
-        }
-    }
+//    private void handle(KeyEvent event) {
+//        if (event.getCode().equals(KeyCode.TAB)) {
+//            //move to next text field
+//        }
+//    }
 
     @FXML
-    private void saveSong(ActionEvent event) {
-        saveSong();
+    private void save(ActionEvent event) {
+        String newTitle = titleField.getText();
+        String newTuning = tuningField.getText();
+        String newVibe = vibeField.getText();
+        String newLyrics = lyricsField.getText();
+        String newNotes = notesField.getText();
+
+        currentSong.setTitle(newTitle);
+        currentSong.setTuning(newTuning);
+        currentSong.setVibe(newVibe);
+        currentSong.setLyrics(newLyrics);
+        currentSong.setNotes(newNotes);
+        
+        currentSong.writeToFile();
+
+        System.out.println(currentSong); 
     }
 
     @FXML
     private void newSong(ActionEvent event) {
-        initialize();
-        System.out.println(currentSong);
-    }
-    
-    private void loadSongIntoGUI(ActionEvent event) {
+        //make blank new song
+        //add "New Song" to the song select combobox - isn't saved until save is pressed
+        //populate fields from new song
+        //any unsaved new songs will be lost
+        currentSong = new Song("New Song", " ", " ", " ", " ");
+        observableSongList.add(currentSong);
         titleField.setText(currentSong.getTitle());
         tuningField.setText(currentSong.getTuning());
         vibeField.setText(currentSong.getVibe());
         lyricsField.setText(currentSong.getLyrics());
         notesField.setText(currentSong.getNotes());
+        System.out.println(currentSong);
     }
+    
+    
+//    private void loadSongIntoGUI(ActionEvent event) {
+//        titleField.setText(currentSong.getTitle());
+//        tuningField.setText(currentSong.getTuning());
+//        vibeField.setText(currentSong.getVibe());
+//        lyricsField.setText(currentSong.getLyrics());
+//        notesField.setText(currentSong.getNotes());
+//    }
     
     public void initialize() {   
         //loading the songs and populating the song selection combobox
-        loadedSongs = loadSongsIntoList();
+        List<Song> loadedSongs = loadSongsIntoList();
         observableSongList = FXCollections.observableList(loadedSongs);
         songSelectCombo.setItems(observableSongList);
         
@@ -111,31 +131,19 @@ public class PrimaryController {
         lyricsField.setText(currentSong.getLyrics());
         notesField.setText(currentSong.getNotes());
     }
-    
-    public void saveSong() {
-        String newTitle = titleField.getText();
-        String newTuning = tuningField.getText();
-        String newVibe = vibeField.getText();
-        String newLyrics = lyricsField.getText();
-        String newNotes = notesField.getText();
-        currentSong.setAll(newTitle, newTuning, newVibe, newLyrics, newNotes);
-        currentSong.writeToFile();
-
-        System.out.println(currentSong);         
-    }
          
     public List loadSongsIntoList() {
         //get the file names from the songfiles folder and add to array
         String[] fileNames;        
         File file = new File("songfiles/");        
-        fileNames = file.list();        
+        fileNames = file.list();
         //System.out.println(Arrays.toString(fileNames));
         
         //convert to ArrayList and remove gitignore file
         ArrayList fileNamesList = new ArrayList();
-        for (String piece: fileNames) {
-            if (!piece.equals(".gitignore")) {
-                fileNamesList.add(piece);
+        for (String fileName: fileNames) {
+            if (!fileName.equals(".gitignore")) {
+                fileNamesList.add(fileName);
             }
         }
         System.out.println(fileNamesList);       
@@ -152,8 +160,8 @@ public class PrimaryController {
 
                 String[] split = str.split("\\|");   
                 System.out.println(Arrays.toString(split));
-                
-                //make a new Song object with the split string. split[0] will be title [1] tuning etc
+                               
+                //make a new Song object with the split string. split[0] will be title, [1] tuning etc
                 Song newSong = new Song(split[0], split[1], split[2], split[3], split[4]);
                 songs.add(newSong);               
             } catch (IOException ex) {
@@ -163,7 +171,7 @@ public class PrimaryController {
 
         return songs;          
     }
-    
+       
 //    public ArrayList loadSongsIntoArrayList() {
 //        //get the file names from the songfiles folder and add to array
 //        String[] fileNames;        
@@ -206,6 +214,8 @@ public class PrimaryController {
 //        return songs;  
 //        
 //    }
+
+
 
    
 
